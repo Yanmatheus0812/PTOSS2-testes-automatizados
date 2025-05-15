@@ -1,0 +1,31 @@
+describe('CT04: Teste invalido com slug de caracteres especiais', () => {
+  it('Testa a criacao de uma pagina com slug de caraceres especiais', () => {
+    cy.visit('http://127.0.0.1:8000/admin/');
+
+    // Login
+    cy.get('input[name="username"]').type('user'); //digite seu usuario aqui
+    cy.get('input[name="password"]').type('senha{enter}'); //digite sua senha aqui
+
+    // Confirma se entrou no admin
+    cy.url().should('include', '/admin/');
+
+    // Acessa "Pages"
+    cy.contains('Pages').click();
+    cy.contains('Home').click();
+
+    // Acessa a pagina de adicionar uma nova página
+    cy.get('a[href="/admin/pages/3/add_subpage/"]').click();
+
+    // Escolhe o tipo de página (blog page)
+    cy.get('a[href="/admin/pages/add/home/blogpage/3/"]').click();
+
+    // Preenche o formulário da nova página
+    cy.get('input[name="title"]').type('Teste');
+    cy.get('input[name="date"]').type('2025-05-13'); 
+    cy.contains('a', 'Promote').click(); // navega para a aba "promote"
+    cy.get('input[name="slug"]').clear().type('!^]~');
+
+    // Salva a página
+    cy.contains('Save draft').click();
+  });
+});
